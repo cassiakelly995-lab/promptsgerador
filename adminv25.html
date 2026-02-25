@@ -64,6 +64,8 @@
         .acesso-nome { font-size: 13px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; }
         .acesso-meta { font-size: 10px; color: var(--subtext); margin-top: 5px; letter-spacing: 0.5px; }
         .acesso-uso { font-size: 9px; color: var(--gold); font-weight: 700; letter-spacing: 1px; margin-top: 3px; }
+        /* Link visível abaixo do item */
+        .acesso-link { font-size: 9px; color: rgba(191,149,63,0.6); margin-top: 5px; word-break: break-all; letter-spacing: 0.3px; }
         .badge { font-size: 8px; font-weight: 800; letter-spacing: 2px; padding: 5px 12px; border-radius: 2px; text-transform: uppercase; }
         .badge-ativo { background: var(--success-soft); color: var(--success); border: 1px solid var(--success); }
         .badge-fixo { background: rgba(191,149,63,0.1); color: var(--gold); border: 1px solid var(--border); }
@@ -150,9 +152,20 @@
 </div>
 <script>
     const SENHA_ADMIN = "cassia2025";
+    // ✅ ALTERE AQUI PARA A URL DO SEU ARQUIVO DE CLIENTE (onde está hospedado o v25.html)
     const BASE_URL = "https://cassiakelly995-lab.github.io/meu-app/v25.html";
     const FIXOS = ["Helen_cristina"];
-    const firebaseConfig = { databaseURL: "https://cassia-v9-default-rtdb.firebaseio.com" };
+
+    // ✅ FIREBASE CONFIG COMPLETO
+    const firebaseConfig = {
+        apiKey: "AIzaSyAN0c5mBUFS47PgZFJuCgOBDU5lutYh95k",
+        authDomain: "cassia-v9.firebaseapp.com",
+        databaseURL: "https://cassia-v9-default-rtdb.firebaseio.com",
+        projectId: "cassia-v9",
+        storageBucket: "cassia-v9.firebasestorage.app",
+        messagingSenderId: "271639639618",
+        appId: "1:271639639618:web:06392ae4e2a1ddcf135fdb"
+    };
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
     let idParaRevogar = null, nomeParaRevogar = null;
@@ -208,6 +221,7 @@
             const data = acc.criadoEm ? new Date(acc.criadoEm).toLocaleDateString('pt-BR', { day:'2-digit', month:'2-digit', year:'numeric', hour:'2-digit', minute:'2-digit' }) : '—';
             const usos = acc.usos || 0;
             const ultimoUso = acc.ultimoUso ? new Date(acc.ultimoUso).toLocaleDateString('pt-BR', { day:'2-digit', month:'2-digit', hour:'2-digit', minute:'2-digit' }) : 'Nunca acessou';
+            const linkCliente = BASE_URL + '?id=' + id;
             const item = document.createElement('div');
             item.className = 'acesso-item';
             item.style.animationDelay = (i * 0.05) + 's';
@@ -216,6 +230,7 @@
                     <div class="acesso-nome">${acc.nome}</div>
                     <div class="acesso-meta">Criado em: ${data} &nbsp;|&nbsp; ID: ${id}</div>
                     <div class="acesso-uso">Último acesso: ${ultimoUso} &nbsp;·&nbsp; Total de acessos: ${usos}</div>
+                    <div class="acesso-link">🔗 ${linkCliente}</div>
                 </div>
                 <span class="badge ${ehFixo ? 'badge-fixo' : 'badge-ativo'}">${ehFixo ? 'FIXO' : 'ATIVO'}</span>
                 <button class="btn-copiar" id="btn-cp-${id}" onclick="copiar('${id}','${acc.nome}')">📋 COPIAR LINK</button>
@@ -229,8 +244,15 @@
         if (!nome) { showMsg('Digite o nome da pessoa', '#e74c3c'); return; }
         const id = btoa(nome + Date.now()).replace(/[^a-zA-Z0-9]/g,'').substring(0, 12);
         db.ref('acessos_v9/' + id).set({ nome, criadoEm: Date.now(), usos: 0 })
-            .then(() => { document.getElementById('inp-nome').value = ''; showMsg('✅ Acesso gerado!', '#27ae60'); copiar(id, nome); })
-            .catch(() => showMsg('Erro ao salvar.', '#e74c3c'));
+            .then(() => {
+                document.getElementById('inp-nome').value = '';
+                showMsg('✅ Acesso gerado com sucesso!', '#27ae60');
+                copiar(id, nome);
+            })
+            .catch(err => {
+                console.error(err);
+                showMsg('❌ Erro ao salvar. Verifique o Firebase.', '#e74c3c');
+            });
     }
 
     function copiar(id, nome) {
@@ -247,7 +269,7 @@
     function fallback(link, cb) {
         const el = document.createElement('textarea');
         el.value = link; document.body.appendChild(el); el.select();
-        try { document.execCommand('copy'); cb(); } catch(e) { alert('Link: ' + link); }
+        try { document.execCommand('copy'); cb(); } catch(e) { alert('Copie o link manualmente:\n' + link); }
         document.body.removeChild(el);
     }
 
