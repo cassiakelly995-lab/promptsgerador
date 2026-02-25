@@ -178,7 +178,16 @@
     </footer>
 </div>
 <script>
-    const firebaseConfig = { databaseURL: "https://cassia-v9-default-rtdb.firebaseio.com" };
+    // ✅ FIREBASE CONFIG COMPLETO
+    const firebaseConfig = {
+        apiKey: "AIzaSyAN0c5mBUFS47PgZFJuCgOBDU5lutYh95k",
+        authDomain: "cassia-v9.firebaseapp.com",
+        databaseURL: "https://cassia-v9-default-rtdb.firebaseio.com",
+        projectId: "cassia-v9",
+        storageBucket: "cassia-v9.firebasestorage.app",
+        messagingSenderId: "271639639618",
+        appId: "1:271639639618:web:06392ae4e2a1ddcf135fdb"
+    };
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
@@ -197,7 +206,10 @@
             } else {
                 bloqueado("ACESSO REVOGADO", "Seu acesso foi desativado.<br>Entre em contato para mais informações.");
             }
-        }).catch(() => bloqueado("ERRO DE CONEXÃO", "Não foi possível verificar seu acesso.<br>Tente novamente."));
+        }).catch(err => {
+            console.error(err);
+            bloqueado("ERRO DE CONEXÃO", "Não foi possível verificar seu acesso.<br>Tente novamente.");
+        });
     }
 
     function bloqueado(titulo, msg) {
