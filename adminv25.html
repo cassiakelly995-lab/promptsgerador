@@ -64,7 +64,6 @@
         .acesso-nome { font-size: 13px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; }
         .acesso-meta { font-size: 10px; color: var(--subtext); margin-top: 5px; letter-spacing: 0.5px; }
         .acesso-uso { font-size: 9px; color: var(--gold); font-weight: 700; letter-spacing: 1px; margin-top: 3px; }
-        /* Link visível abaixo do item */
         .acesso-link { font-size: 9px; color: rgba(191,149,63,0.6); margin-top: 5px; word-break: break-all; letter-spacing: 0.3px; }
         .badge { font-size: 8px; font-weight: 800; letter-spacing: 2px; padding: 5px 12px; border-radius: 2px; text-transform: uppercase; }
         .badge-ativo { background: var(--success-soft); color: var(--success); border: 1px solid var(--success); }
@@ -152,11 +151,12 @@
 </div>
 <script>
     const SENHA_ADMIN = "cassia2025";
-    // ✅ ALTERE AQUI PARA A URL DO SEU ARQUIVO DE CLIENTE (onde está hospedado o v25.html)
-    const BASE_URL = "https://cassiakelly995-lab.github.io/meu-app/v25.html";
+
+    // ✅ URL CORRIGIDA COM O NOME CERTO DO REPOSITÓRIO
+    const BASE_URL = "https://cassiakelly995-lab.github.io/promptsgerador/v25.html";
+
     const FIXOS = ["Helen_cristina"];
 
-    // ✅ FIREBASE CONFIG COMPLETO
     const firebaseConfig = {
         apiKey: "AIzaSyAN0c5mBUFS47PgZFJuCgOBDU5lutYh95k",
         authDomain: "cassia-v9.firebaseapp.com",
@@ -266,6 +266,7 @@
             navigator.clipboard.writeText(link).then(sucesso).catch(() => fallback(link, sucesso));
         } else { fallback(link, sucesso); }
     }
+
     function fallback(link, cb) {
         const el = document.createElement('textarea');
         el.value = link; document.body.appendChild(el); el.select();
